@@ -3,72 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free AI Voice Studio</title>
+    <title>AI Voice Studio - Free & Pro</title>
     <style>
-        body { font-family: 'Arial', sans-serif; background-color: #000; color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background-color: #111; padding: 25px; border-radius: 12px; border: 2px solid #ff0000; box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); width: 90%; max-width: 500px; text-align: center; }
-        h2 { color: #ff0000; margin-bottom: 20px; text-shadow: 0 0 8px #ff0000; }
-        
-        .api-box { display: flex; justify-content: space-between; margin-bottom: 15px; }
-        .api-box input { width: 70%; margin-bottom: 0; }
-        .api-box button { width: 25%; padding: 10px; background-color: #28a745; border: none; color: white; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        .api-box button:hover { background-color: #218838; }
-
-        input, textarea { width: 95%; padding: 12px; border: 1px solid #333; border-radius: 6px; font-size: 16px; margin-bottom: 15px; background-color: #222; color: #fff; box-sizing: border-box; }
-        textarea { height: 100px; resize: none; }
-        input:focus, textarea:focus { outline: none; border-color: #ffcc00; }
-        
-        .main-btn { background-color: #ffcc00; color: #000; border: none; padding: 14px 20px; font-size: 16px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; text-transform: uppercase; }
-        .main-btn:hover { background-color: #e6b800; }
-        
-        audio { width: 100%; margin-top: 20px; display: none; }
-        #downloadBtn { display: none; background-color: #ff0000; color: #fff; text-decoration: none; padding: 12px; margin-top: 15px; border-radius: 6px; font-weight: bold; width: 90%; margin-left: auto; margin-right: auto; }
-        #status { margin-top: 10px; font-size: 14px; color: #00ff00; }
+        /* DESIGN: Black, Red, Yellow High-Contrast */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #111111;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #ffcc00; /* Neon Yellow */
+            box-shadow: 0 0 25px rgba(255, 204, 0, 0.4);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        h2 { 
+            color: #ff0000; /* High-Contrast Red */
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+        }
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ffcc00;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background-color: #222;
+            color: #fff;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input:focus, textarea:focus {
+            border-color: #ff0000;
+            outline: none;
+        }
+        .save-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            font-weight: bold;
+        }
+        .generate-btn {
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+        .generate-btn:hover {
+            background-color: #cc0000;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+        }
+        #status {
+            margin-top: 15px;
+            font-size: 14px;
+            min-height: 20px;
+        }
+        audio {
+            width: 100%;
+            margin-top: 20px;
+            display: none;
+        }
+        #downloadBtn {
+            display: none;
+            background-color: #ffcc00;
+            color: #000;
+            text-decoration: none;
+            padding: 12px;
+            margin-top: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .footer-note {
+            font-size: 12px;
+            color: #777;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>🔥 FREE HUGGINGFACE VOICE</h2>
+    <h2>🔥 AI Voice Studio</h2>
     
-    <div class="api-box">
-        <input type="password" id="apiKey" placeholder="Apni hf_... wali Key paste karein">
-        <button onclick="saveApiKey()">Save Key</button>
+    <div class="input-group">
+        <label>API Key (Auto-Saved):</label>
+        <input type="password" id="apiKey" placeholder="Yahan apni API Key paste karein...">
+        <button class="save-btn" onclick="saveKey()">SAVE KEY FOR PERMANENT</button>
     </div>
-    
-    <textarea id="text" placeholder="Yahan Hindi script likhein (Jaise: हेलो दोस्तों)..."></textarea>
-    
-    <button class="main-btn" onclick="generateVoice()">Generate Voice</button>
+
+    <div class="input-group">
+        <label>Apna Text Likhein:</label>
+        <textarea id="textInput" placeholder="Namaste doston, kaise hain aap sab?"></textarea>
+    </div>
+
+    <button class="generate-btn" id="genBtn" onclick="generateVoice()">Generate & Download</button>
+
     <div id="status"></div>
 
     <audio id="audioPlayer" controls></audio>
-    <a id="downloadBtn" href="#" download="huggingface_voice.mp3">⬇️ DOWNLOAD MP3</a>
+    <a id="downloadBtn" href="#" download="ai_voice_thenewtips.mp3">⬇️ DOWNLOAD MP3</a>
+
+    <p class="footer-note">Note: Pehli baar mein error aaye toh 20 sec rukh kar firse try karein.</p>
 </div>
 
 <script>
+    // 1. PAGE LOAD PAR KEY CHECK KARNA
     window.onload = function() {
-        let savedKey = localStorage.getItem("myHFKey");
-        if (savedKey) { document.getElementById("apiKey").value = savedKey; }
+        const savedKey = localStorage.getItem("userApiKey");
+        if (savedKey) {
+            document.getElementById("apiKey").value = savedKey;
+            showStatus("✅ Saved key loaded automatically.", "#00ff00");
+        }
     };
 
-    function saveApiKey() {
-        let key = document.getElementById("apiKey").value.trim();
-        if (key === "") { alert("Bhai, pehle API Key dalo!"); return; }
-        localStorage.setItem("myHFKey", key);
-        alert("✅ Hugging Face API Key save ho gayi!");
+    // 2. KEY SAVE KARNE KA FUNCTION
+    function saveKey() {
+        const key = document.getElementById("apiKey").value.trim();
+        if (key === "") {
+            alert("Bhai, pehle key toh dalo!");
+            return;
+        }
+        localStorage.setItem("userApiKey", key);
+        alert("Success! Ab aapko baar-baar key nahi dalni padegi.");
     }
 
+    // 3. VOICE GENERATE KARNE KA MAIN FUNCTION
     async function generateVoice() {
-        const apiKey = document.getElementById('apiKey').value.trim();
-        const text = document.getElementById('text').value.trim();
-        const statusText = document.getElementById('status');
-        const audioPlayer = document.getElementById('audioPlayer');
-        const downloadBtn = document.getElementById('downloadBtn');
+        const apiKey = document.getElementById("apiKey").value.trim();
+        const text = document.getElementById("textInput").value.trim();
+        const statusDiv = document.getElementById("status");
+        const audioPlayer = document.getElementById("audioPlayer");
+        const downloadBtn = document.getElementById("downloadBtn");
+        const btn = document.getElementById("genBtn");
 
-        if(!apiKey || !text) { alert("Key aur Text dono zaruri hain!"); return; }
+        if (!apiKey || !text) {
+            alert("Bhai, Key aur Text dono bharo!");
+            return;
+        }
 
-        statusText.style.color = "#ffcc00";
-        statusText.innerText = "⏳ Audio generate ho raha hai, wait karein...";
+        // Reset UI
+        showStatus("⏳ Connecting to AI Server...", "#ffcc00");
+        btn.disabled = true;
+        btn.innerText = "Processing...";
         audioPlayer.style.display = "none";
         downloadBtn.style.display = "none";
 
@@ -76,29 +187,48 @@
             const response = await fetch(
                 "https://api-inference.huggingface.co/models/facebook/mms-tts-hin",
                 {
-                    headers: { Authorization: `Bearer ${apiKey}` },
+                    headers: { 
+                        "Authorization": `Bearer ${apiKey}`,
+                        "Content-Type": "application/json" 
+                    },
                     method: "POST",
                     body: JSON.stringify({ inputs: text }),
                 }
             );
 
-            if (!response.ok) { throw new Error("❌ Error! API Key galat hai ya server busy hai."); }
-
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            
-            audioPlayer.src = url;
-            audioPlayer.style.display = "block";
-            downloadBtn.href = url;
-            downloadBtn.style.display = "block";
-            
-            statusText.style.color = "#00ff00";
-            statusText.innerText = "✅ Aawaz taiyar hai! Download karein.";
-            
+            // Handle Server Wake-up (503 Error)
+            if (response.status === 503) {
+                const data = await response.json();
+                const wait = data.estimated_time || 20;
+                showStatus(`⏳ Server so raha hai. Waking up in ${Math.round(wait)}s... Firse try karein.`, "#ffcc00");
+            } 
+            else if (!response.ok) {
+                throw new Error("❌ API Key galat hai ya server busy hai.");
+            } 
+            else {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                
+                audioPlayer.src = url;
+                audioPlayer.style.display = "block";
+                
+                downloadBtn.href = url;
+                downloadBtn.style.display = "block";
+                
+                showStatus("✅ Voice Taiyar Hai! Niche se download karein.", "#00ff00");
+            }
         } catch (error) {
-            statusText.style.color = "#ff0000";
-            statusText.innerText = error.message;
+            showStatus(error.message, "#ff0000");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "Generate & Download";
         }
+    }
+
+    function showStatus(msg, color) {
+        const statusDiv = document.getElementById("status");
+        statusDiv.innerText = msg;
+        statusDiv.style.color = color;
     }
 </script>
 
