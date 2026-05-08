@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Human Voice Text-to-Speech</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        h2 { color: #333; margin-bottom: 20px; }
+        textarea {
+            width: 90%;
+            height: 120px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            resize: none;
+            margin-bottom: 15px;
+        }
+        select {
+            width: 95%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+        button {
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        button:hover { background-color: #cc0000; }
+        .note { font-size: 12px; color: #666; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Text to Voice (No Copyright)</h2>
+    
+    <textarea id="text" placeholder="Yahan apna Hindi ya English text type karein..."></textarea>
+    
+    <select id="voiceSelect">
+        <option value="">Voice load ho rahi hai...</option>
+    </select>
+    
+    <button onclick="speakText()">Convert to Voice ▶</button>
+
+    <p class="note">Note: Ye aapke browser ki voices use karta hai. Microsoft Edge browser mein sabse natural (insaan jaisi) voices milti hain.</p>
+</div>
+
+<script>
+    let synth = window.speechSynthesis;
+    let voiceSelect = document.getElementById('voiceSelect');
+    let voices = [];
+
+    function populateVoiceList() {
+        voices = synth.getVoices();
+        voiceSelect.innerHTML = '';
+        
+        // Sirf Hindi aur English voices filter karne ke liye
+        voices.forEach((voice, i) => {
+            if(voice.lang.includes('hi') || voice.lang.includes('en')) {
+                let option = document.createElement('option');
+                option.textContent = `${voice.name} (${voice.lang})`;
+                // Male/Female name se pehchana ja sakta hai (jaise Swara, Madhur, Ravi, etc.)
+                option.value = i;
+                voiceSelect.appendChild(option);
+            }
+        });
+    }
+
+    populateVoiceList();
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = populateVoiceList;
+    }
+
+    function speakText() {
+        let textInput = document.getElementById('text').value;
+        if (textInput !== '') {
+            let utterThis = new SpeechSynthesisUtterance(textInput);
+            let selectedOption = voiceSelect.selectedOptions[0].value;
+            utterThis.voice = voices[selectedOption];
+            // Speed aur Pitch control (1 normal hai)
+            utterThis.rate = 0.9; 
+            utterThis.pitch = 1;
+            synth.speak(utterThis);
+        } else {
+            alert("Bhai, pehle thoda text toh likho!");
+        }
+    }
+</script>
+
+</body>
+</html>
